@@ -66,11 +66,9 @@ export async function createInvoice(prevState: State, formData: FormData) {
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 
-    // console.log(rawFormData);
-
 }
 
-export async function updateInvoice(prevState: State, id: string, formData: FormData) {
+export async function updateInvoice( id: string, prevState: State, formData: FormData) {
     
     const validatedFields = UpdateInvoice.safeParse({
         customerId: formData.get('customerId'),
@@ -103,7 +101,6 @@ export async function updateInvoice(prevState: State, id: string, formData: Form
 }
 
 export async function deleteInvoice(id: string) {
-    throw new Error('Failed to Delete Invoice');
     try {
         await sql`DELETE FROM invoices WHERE id = ${id}`;
         revalidatePath('/dashboard/invoices');
@@ -124,6 +121,8 @@ export async function authenticate(
             switch (error.type) {
                 case 'CredentialsSignin':
                     return 'Invalid credentials.';
+                case 'AccessDenied':
+                    return 'Access Denied';
                 default:
                     return 'Something went wrong';
             }
